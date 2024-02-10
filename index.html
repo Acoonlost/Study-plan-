@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Estudo Personalizado</title>
+    <style>
+        /* Adicione estilos CSS conforme necessário */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .disciplina {
+            cursor: move;
+        }
+
+        #plano {
+            border: 2px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Plano de Estudo Personalizado</h1>
+    </header>
+
+    <section id="disciplinas">
+        <h2>Escolha suas Disciplinas</h2>
+        <form id="formDisciplinas">
+            <label for="disciplina">Disciplina:</label>
+            <input type="text" id="disciplina">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" min="1" value="1">
+            <button type="button" onclick="adicionarDisciplina()">Adicionar</button>
+        </form>
+        <ul id="listaDisciplinas">
+            <!-- Lista de disciplinas será exibida aqui -->
+        </ul>
+    </section>
+
+    <section id="plano">
+        <h2>Plano de Estudo</h2>
+        <p>Arraste e solte as disciplinas para organizar seu plano de estudo:</p>
+        <div id="planoArrastavel" class="arrastavel">
+            <!-- Disciplinas serão exibidas aqui -->
+        </div>
+    </section>
+
+    <script>
+        const formDisciplinas = document.getElementById('formDisciplinas');
+        const listaDisciplinas = document.getElementById('listaDisciplinas');
+        const planoArrastavel = document.getElementById('planoArrastavel');
+
+        formDisciplinas.addEventListener('submit', function(event) {
+            event.preventDefault();
+            adicionarDisciplina();
+        });
+
+        function adicionarDisciplina() {
+            const disciplinaInput = document.getElementById('disciplina');
+            const quantidadeInput = document.getElementById('quantidade');
+            const disciplina = disciplinaInput.value.trim();
+            const quantidade = parseInt(quantidadeInput.value, 10);
+
+            if (disciplina && quantidade > 0) {
+                for (let i = 0; i < quantidade; i++) {
+                    const li = document.createElement('li');
+                    li.textContent = disciplina;
+                    listaDisciplinas.appendChild(li);
+                }
+
+                disciplinaInput.value = '';
+                quantidadeInput.value = 1;
+            }
+        }
+
+        listaDisciplinas.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain', event.target.innerText);
+        });
+
+        planoArrastavel.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+
+        planoArrastavel.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const disciplinaTexto = event.dataTransfer.getData('text/plain');
+            const novaDisciplina = document.createElement('div');
+            novaDisciplina.textContent = disciplinaTexto;
+            novaDisciplina.className = 'disciplina';
+            novaDisciplina.draggable = true;
+            planoArrastavel.appendChild(novaDisciplina);
+        });
+    </script>
+
+</body>
+</html>
